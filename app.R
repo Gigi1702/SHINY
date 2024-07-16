@@ -118,7 +118,7 @@ server <- function(input, output) {
     
     output$distPlot <- renderPlot({
         plot(dataInput()$x,dataInput()$y,xlab = 'X', ylab ='Y')
-        title(main= 'Regrex1 scatter plot')
+        title(main= 'Scatter plot')
     })
 
     lmplot <- function(){
