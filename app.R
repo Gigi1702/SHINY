@@ -13,7 +13,7 @@ library(shiny)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("SHINY APP ASSIGNMENT"),
+     titlePanel("Linear model in R"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -114,18 +114,11 @@ server <- function(input, output) {
         
        
         }
-    # output$distPlot <- renderPlot({
-    #     # generate bins based on input$bins from ui.R
-    #     x    <- faithful[, 2]
-    #     bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    #     print(bins)
-    #     # draw the histogram with the specified number of bins
-    #     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    # })
-    # 
+   
     
     output$distPlot <- renderPlot({
         plot(dataInput()$x,dataInput()$y,xlab = 'X', ylab ='Y')
+        title(main= 'Regrex1 scatter plot')
     })
 
     lmplot <- function(){
