@@ -62,14 +62,21 @@ ui <- fluidPage(
             tags$hr(),
             
             # Input: Select number of rows to display ----
-            actionButton("DO", "PLOT LINEAR MODEL AND STATS")
+            actionButton("GO", "PLOT LINEAR MODEL"), 
+
+            # Horizontal line ----
+            tags$hr(),
+            
+            # Input: Select number of rows to display ----
+            actionButton("DO", "PRINT STATS")
         ),
         # Show a plot of the generated distribution
         mainPanel(
            plotOutput("distPlot"),
            plotOutput("lmPlot"),
-            tableOutput("contents"),
-            textOutput("values")
+            textOutput("values"),
+            tableOutput("contents")
+            
            
     
         
@@ -91,8 +98,14 @@ server <- function(input, output) {
     })
 
     observeEvent(input$DO,{
-        update_lm()
+        
         update_stats()
+        stats_print()
+        
+    })
+
+    observeEvent(input$GO,{
+        update_lm()
         lmplot()
     })
     update_lm <- function(){
@@ -100,7 +113,8 @@ server <- function(input, output) {
         
        
         }
-    update_stats <- function(){
+   
+   update_stats <- function(){
         model <- lm(y~x, data = dataInput())
         model_sum <- summary(model)
         r <- model_sum$r.squared
@@ -114,8 +128,8 @@ server <- function(input, output) {
         
        
         }
-   
-    
+
+        
     output$distPlot <- renderPlot({
         plot(dataInput()$x,dataInput()$y,xlab = 'X', ylab ='Y')
         title(main= 'Scatter plot')
@@ -124,13 +138,17 @@ server <- function(input, output) {
     lmplot <- function(){
         output$lmPlot <- renderPlot({
             plot(dataInput()$x,dataInput()$y,xlab = 'X', ylab ='Y')
-            title(main= 'Linear model', sub= paste( "Correlation Coefficient = ", lmdata$r, " ; ", "Intercept= ", lmdata$inter, " ; ", "Slope = ", lmdata$slope))
+            title(main= 'Linear model') 
            abline(lmdata$model,  col = 'red')
+            legend('bottomright',legend = "Linear model", col='red', lty = 1)
         })
     }
     
-    
-    
+    stats_print <- function(){
+        output$values <- renderText({
+            paste("Correlation Coefficient = ", lmdata$r, " ; ", "Intercept= ", lmdata$inter, " ; ", "Slope = ", lmdata$slope)
+        })
+    }
     output$contents <- renderTable({
         
         # input$file1 will be NULL initially. After the user selects
@@ -152,3 +170,4 @@ server <- function(input, output) {
     
 # Run the application 
 shinyApp(ui = ui, server = server)
+
